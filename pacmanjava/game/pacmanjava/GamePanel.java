@@ -107,7 +107,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, 1000, 600);
-		tileMap.draw(g);
+		//tileMap.draw(g);
 		pac.draw(g);
 	
 		
