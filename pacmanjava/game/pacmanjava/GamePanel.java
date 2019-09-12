@@ -1,135 +1,156 @@
 package pacmanjava;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
 
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 
-public class GamePanel extends JPanel implements Runnable{
-	
-	static Window w ;
-	public static int WIDTH=600 ; //size of the window
+import gfx.Art;
+import gfx.Screen;
+import gfx.Tile;
+import gfx.Ui;
+
+public class GamePanel extends Canvas implements Runnable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	public static int WIDTH=600 ; 
 	public static int HEIGHT=800;
+
+
+
+	//private Thread animator;
+	private  boolean running = false; 
+
+	private Screen screen ;
 	
-	public static int pWIDTH = 600; //size of the panel
-	public static int pHEIGHT= 800;
 	
-	private Thread animator;
-	private volatile boolean running = false; // stops the animation
 	
-	// global variables for off-screen rendering
-	private Graphics2D g;
-	private BufferedImage image ;
-	
-	private int FPS=60;
-	//period in milliseconds
-	private int period=1000/FPS;
-	
-	private TileMap tileMap;
-	private Pacman pac;
-	
+
 	
 	public GamePanel() {
-		super();
-		setPreferredSize(new Dimension(pWIDTH,pHEIGHT));
-		setFocusable(true); 
-		requestFocus();	
+		screen = new Screen(WIDTH, HEIGHT);
+	
 	}
 	
-	public void addNotify( )
-	// Wait for the JPanel to be added to the JFrame before starting. 
-	{	
-		super.addNotify( ); 
-		startGame( );
-
-	}
-	
-	private void startGame( )
-	{
-		if (animator == null || !running)
-		{	
-			animator = new Thread(this);
-			animator.start( );
-		}
-	}
-	
-	public void stopGame( )
-	{ running = false; }
 
 	@Override
 	public void run() {
-		
-		init();
-		
-		long startTime, timeDiff, sleepTime;
-		
+		int fps=0,tick=0;
+		double fpsTimer=System.currentTimeMillis();
+
+		double nsPerTick = 1000000000.0d/60; 
+		double then=System.nanoTime();
+		double unprocessed=0;
+
+
+
 		while(running) {
-			startTime=System.nanoTime();
-			w =Window.getWindows()[0];
-			WIDTH=w.getWidth() ; //size of the window
-			HEIGHT=w.getHeight();
+			boolean canRender=false;
 			
-			gameUpdate( ); 
-			gameRender( ); 
-			draw(); 
-			// time difference in milliseconds
-			timeDiff= (System.nanoTime()-startTime)/1000000;
-			sleepTime=period-timeDiff;
-			if(sleepTime>0) {
+			double now=System.nanoTime();
+			unprocessed+=(now-then)/nsPerTick;
+			then=now; 
+			while(unprocessed>=1) {
+				tick++;
+				tick();
+				canRender=true;
+				--unprocessed;
+			}
+
 			try {
-				Thread.sleep(sleepTime); // sleep a bit
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-			catch(InterruptedException ex){System.out.println("threaD PROB");}
+
+			if(canRender) {
+				fps++;
+				render();
 			}
+			
+			if(System.currentTimeMillis()-fpsTimer>1000) {
+				System.out.printf("%d fps, %d tick %n" ,fps,tick );
+				fps=0;tick=0;
+				fpsTimer+=1000;
+			}
+
 		}
 	}
-	
-	private void init() {
-		running = true;
-		image= new BufferedImage(pWIDTH, pHEIGHT, BufferedImage.TYPE_INT_RGB);
-		g= (Graphics2D) image.getGraphics();
-		pac = new Pacman();
-		tileMap = new TileMap(20);
-		tileMap.loadMap();
-		
-		
-	}
-	//////////////////////////////////////////////
-	
-	
-	private void gameUpdate() {
-		
-		tileMap.update();
-		pac.update();
-	}
-	
-	private void gameRender() {
-		
-		g.setColor(Color.BLUE);
-		g.fillRect(0, 0, 1000, 600);
-		//tileMap.draw(g);
-		pac.draw(g);
-	
-		
-			
-	}
-	
-	private void draw() {
-		
-		Graphics2D g2 =(Graphics2D) getGraphics();
-		g2.drawImage(image, (WIDTH/2)-(pWIDTH/2), 0, null);
-		//System.out.println(WIDTH+"  "+HEIGHT);
-		g2.dispose();
-	
-		
-	
-	}
-	
-	
-	
-
-	
 
 
+
+	private void render() {
+		//add effiection
+		BufferStrategy bs=getBufferStrategy();
+		if(bs==null) {
+			createBufferStrategy(3);
+			requestFocus();
+			return;
+		}
+		
+		Graphics g=bs.getDrawGraphics();
+		//render object here 
+		  // screen.clear(0);
+		//g.setColor(Color.BLACK);
+		//g.fillRect(0, 0, WIDTH,HEIGHT);
+		
+	    screen.render(Art.sprites[5][0],Tile.SIZE,0);
+		//screen.render(Art.sprites[6][0], 500, 600);
+
+		//Ui.render(screen,g);
+
+		g.drawImage(screen.image, 0, 0, WIDTH, HEIGHT, null);		
+		g.dispose(); 
+		bs.show();
+
+	}
+
+
+	private void tick() {
+
+	}
+
+	public void start() {
+		running =true;
+		new Thread(this).start();
+
+	}
+
+
+	public void stop() {
+		running=false;
+
+	}
 	
+	
+	
+	public static void main(String[] args) {
+		
+	
+		GamePanel game =new GamePanel();
+		Dimension demesion =new Dimension(WIDTH,HEIGHT);
+		game.setMaximumSize(demesion);	 
+		game.setMinimumSize(demesion);
+		game.setSize(demesion);
+		
+		JFrame window=new JFrame();
+		window.setTitle("PACMAN");
+		window.add(game);
+		window.pack();
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
+		
+		game.start();
+		
+		
+		//Screen.setFullScreen();
+
+	}
+
+
+
 }
