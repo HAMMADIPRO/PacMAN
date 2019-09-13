@@ -18,21 +18,19 @@ public class GamePanel extends Canvas implements Runnable{
 	private static final long serialVersionUID = 1L;
 	public static int WIDTH=600 ; 
 	public static int HEIGHT=800;
-
+	public static int FontFps =0;
 
 
 	//private Thread animator;
 	private  boolean running = false; 
 
-	private Screen screen ;
 	
 	
-	
+	  Shape s ;
 
 	
 	public GamePanel() {
-		screen = new Screen(WIDTH, HEIGHT);
-	
+		 s=new Shape() ;
 	}
 	
 
@@ -73,6 +71,7 @@ public class GamePanel extends Canvas implements Runnable{
 			
 			if(System.currentTimeMillis()-fpsTimer>1000) {
 				System.out.printf("%d fps, %d tick %n" ,fps,tick );
+				FontFps=fps;
 				fps=0;tick=0;
 				fpsTimer+=1000;
 			}
@@ -83,7 +82,7 @@ public class GamePanel extends Canvas implements Runnable{
 
 
 	private void render() {
-		//add effiection
+		
 		BufferStrategy bs=getBufferStrategy();
 		if(bs==null) {
 			createBufferStrategy(3);
@@ -92,20 +91,26 @@ public class GamePanel extends Canvas implements Runnable{
 		}
 		
 		Graphics g=bs.getDrawGraphics();
-		//render object here 
-		  // screen.clear(0);
-		//g.setColor(Color.BLACK);
-		//g.fillRect(0, 0, WIDTH,HEIGHT);
 		
-	    screen.render(Art.sprites[5][0],Tile.SIZE,0);
-		//screen.render(Art.sprites[6][0], 500, 600);
+	
+		
+		g.fillRect(0, 0, WIDTH,HEIGHT);
+		g.setColor(Color.BLACK);
+		
+		Ui.render(g);
 
-		//Ui.render(screen,g);
-
-		g.drawImage(screen.image, 0, 0, WIDTH, HEIGHT, null);		
 		g.dispose(); 
 		bs.show();
 
+		
+		
+	
+		
+		
+		
+		
+		
+		
 	}
 
 
@@ -146,8 +151,6 @@ public class GamePanel extends Canvas implements Runnable{
 		
 		game.start();
 		
-		
-		//Screen.setFullScreen();
 
 	}
 
