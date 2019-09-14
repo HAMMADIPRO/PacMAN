@@ -17,14 +17,18 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
  public  class   Shape {
+	 
+	 
+	 private int size ; 
 
+	
 	private int posX; 
 	private int posY;
 	public static  List<BufferedImage>  images ;
 
 	BufferedImage originalImgage ;
 
-	public Shape() {
+	public  Shape() {
 		images = new ArrayList<BufferedImage>();
 
 
@@ -43,9 +47,6 @@ import javax.imageio.ImageIO;
 			}	
 			
 		
-
-
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

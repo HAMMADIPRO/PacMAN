@@ -68,7 +68,7 @@ public class Ui {
 					if (rc==0) {
 									
 						g.setColor(Color.BLACK);
-						g.fillRect(col*20,row*20,20,20);
+						g.fillRect(col*TILESIZE,row*TILESIZE,TILESIZE,TILESIZE);
 						
 					}
 						
@@ -95,7 +95,7 @@ public class Ui {
 			}
 		
 		
-		  Font.draw(g, "Score ",40, 700);
+		  Font.draw(g, "Score u",40, 700);
 		  Font.draw(g, "LIVES ",200, 700);
 		  Font.draw(g, "FPS ",400, 700);
 

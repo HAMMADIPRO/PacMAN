@@ -37,34 +37,15 @@ public class Font {
 
 			int  c= text.indexOf(msg.charAt(i));
 			//System.out.println(c);
-			if(c<0)continue ;
-
-			for (int j =0; j < 30; j++) {
-				if(c<4 ) {
+			if(c<0) {x+=fontSize; continue ;}
 
 					g.drawImage(Shape.images.get(28+c),x,y,fontSize,fontSize+5,null);
-					x+=fontSize;
-					break;
-				} 
-
-				else if(c<36) {
-
-					g.drawImage(Shape.images.get(28+c),x,y,fontSize,fontSize+5,null);
-					x+=fontSize*5/4 ;
-					break;
-				} 
-
-				
-				
-
-
-			}
+					x+=fontSize;			
 
 
 
 		}
 
-		x+=fontSize*2;
 
 	}
 
