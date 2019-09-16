@@ -5,12 +5,11 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
-import gfx.Art;
 import gfx.GameAnime;
 import gfx.Pacman;
-import gfx.Screen;
 import gfx.Tile;
 import gfx.Ui;
+import models.GameState;
 import models.Input;
 
 public class GamePanel extends Canvas implements Runnable{
@@ -47,6 +46,9 @@ public class GamePanel extends Canvas implements Runnable{
 		double nsPerTick = 1000000000.0d/60; 
 		double then=System.nanoTime();
 		double unprocessed=0;
+		
+		
+		Ui.init();
 
 
 
@@ -101,6 +103,7 @@ public class GamePanel extends Canvas implements Runnable{
 		g.fillRect(0, 0, this.getHeight(),this.getHeight());
 		setBackground(Color.BLACK);
 		g.setColor(Color.BLACK);
+		
 		
 		Ui.render(g, p);
 		
@@ -159,6 +162,11 @@ public class GamePanel extends Canvas implements Runnable{
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);
+		
+		GameState gamestate = new GameState();
+		window.addWindowListener(gamestate);
+		window.addWindowFocusListener(gamestate);
+		window.addWindowStateListener(gamestate);
 		
 		game.start();
 		

@@ -12,7 +12,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 
- public  class   Shape extends JPanel {
+ public  class   Sprite extends JPanel {
 	 
 	protected int size ; 
 	protected int posX; 
@@ -22,12 +22,12 @@ import javax.swing.JPanel;
 
 	
 
-	public Shape() {
+	public Sprite() {
 		// TODO Auto-generated constructor stub
 	}
 	
 
-	public Shape(int size, int posX, int posY, List<BufferedImage> images) {
+	public Sprite(int size, int posX, int posY, List<BufferedImage> images) {
 		super();
 		this.size = size;
 		this.posX = posX;

@@ -14,13 +14,13 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import pacmanjava.Shape;
+import pacmanjava.Sprite;
 
 /**
  * @author yassine
  *
  */
-public class Font extends Shape{
+public class Font extends Sprite{
 
 
 	
