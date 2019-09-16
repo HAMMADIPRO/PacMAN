@@ -6,9 +6,12 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import gfx.Art;
+import gfx.GameAnime;
+import gfx.Pacman;
 import gfx.Screen;
 import gfx.Tile;
 import gfx.Ui;
+import models.Input;
 
 public class GamePanel extends Canvas implements Runnable{
 
@@ -19,18 +22,20 @@ public class GamePanel extends Canvas implements Runnable{
 	public static int WIDTH=600 ; 
 	public static int HEIGHT=800;
 	public static int FontFps =0;
-
-
+	public Pacman p ;
+	public Input i;
 	//private Thread animator;
 	private  boolean running = false; 
 
 	
 	
-	  Shape s ;
-
+	Ui inerface;
 	
 	public GamePanel() {
-		 s=new Shape() ;
+		p=new  Pacman();
+		inerface = new Ui(p);
+		i=new Input(this,p);
+		
 	}
 	
 
@@ -70,7 +75,7 @@ public class GamePanel extends Canvas implements Runnable{
 			}
 			
 			if(System.currentTimeMillis()-fpsTimer>1000) {
-				System.out.printf("%d fps, %d tick %n" ,fps,tick );
+			//	System.out.printf("%d fps, %d tick %n" ,fps,tick );
 				FontFps=fps;
 				fps=0;tick=0;
 				fpsTimer+=1000;
@@ -93,17 +98,21 @@ public class GamePanel extends Canvas implements Runnable{
 		Graphics g=bs.getDrawGraphics();
 		
 	
-		
-		g.fillRect(0, 0, WIDTH,HEIGHT);
+		g.fillRect(0, 0, this.getHeight(),this.getHeight());
+		setBackground(Color.BLACK);
 		g.setColor(Color.BLACK);
 		
-		Ui.render(g);
+		Ui.render(g, p);
+		
+		
 
 		g.dispose(); 
 		bs.show();
 
 		
 		
+	
+			
 	
 		
 		
@@ -115,6 +124,8 @@ public class GamePanel extends Canvas implements Runnable{
 
 
 	private void tick() {
+	//	p.move();
+		
 
 	}
 
@@ -151,9 +162,11 @@ public class GamePanel extends Canvas implements Runnable{
 		
 		game.start();
 		
+		
+
 
 	}
 
-
-
 }
+
+

@@ -5,65 +5,93 @@
  */
 package pacmanjava;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
- public  class   Shape {
+
+ public  class   Shape extends JPanel {
 	 
-	 
-	 private int size ; 
+	protected int size ; 
+	protected int posX; 
+	protected int posY;
+	protected  List<BufferedImage>  images ;
+	//private BufferedImage originalImgage ;
 
 	
-	private int posX; 
-	private int posY;
-	public static  List<BufferedImage>  images ;
 
-	BufferedImage originalImgage ;
-
-	public  Shape() {
-		images = new ArrayList<BufferedImage>();
-
-
-		try {
-			BufferedImage originalImgage = ImageIO.read(new File("pacmanTiles.png"));
-
-			System.out.println("Original Image Dimension: "+originalImgage.getWidth()+"x"+originalImgage.getHeight());
-
-			
-			for (int i = 0; i < 22; i++) {
-				for (int j = 0; j <16; j++) {
-					BufferedImage SubImgage = originalImgage.getSubimage(48*j,i*48 , 48, 48);
-					images.add(SubImgage);
-				}
-				
-			}	
-			
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public Shape() {
+		// TODO Auto-generated constructor stub
 	}
+	
 
-	public void setPosition(int x, int y ) {
-		this.posX=x;
-		this.posY=y;
+	public Shape(int size, int posX, int posY, List<BufferedImage> images) {
+		super();
+		this.size = size;
+		this.posX = posX;
+		this.posY = posY;
+		this.images = images;
+	//	this.originalImgage = originalImgage;
 	}
 
 	/**
-	 * 
+	 * @return the size
 	 */
-	public void init() {
-		// TODO Auto-generated method stub
-		
+	
+
+	/**
+	 * @param size the size to set
+	 */
+	public void setSize(int size) {
+		this.size = size;
 	}
+
+	/**
+	 * @return the posX
+	 */
+	public int getPosX() {
+		return posX;
+	}
+
+	/**
+	 * @param posX the posX to set
+	 */
+	public void setPosX(int posX) {
+		this.posX = posX;
+	}
+
+	/**
+	 * @return the posY
+	 */
+	public int getPosY() {
+		return posY;
+	}
+
+	/**
+	 * @param posY the posY to set
+	 */
+	public void setPosY(int posY) {
+		this.posY = posY;
+	}
+
+	/**
+	 * @return the images
+	 */
+	public List<BufferedImage> getImages() {
+		return images;
+	}
+
+	/**
+	 * @param images the images to set
+	 */
+	public void setImages(List<BufferedImage> images) {
+		this.images = images;
+	}
+
+	
+
 
 
 

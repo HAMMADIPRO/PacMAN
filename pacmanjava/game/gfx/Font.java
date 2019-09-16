@@ -6,6 +6,13 @@
 package gfx;
 
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import pacmanjava.Shape;
 
@@ -13,38 +20,64 @@ import pacmanjava.Shape;
  * @author yassine
  *
  */
-public class Font {
+public class Font extends Shape{
 
-	public static final String text ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ:";
 
 	
-	public final static int fontSize =15;
+public static final String text ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ:";
 
-	private Font() {
+	
+	public final static  int  TILESIZE =48;
+
+
+	public Font( ) {
+		
+	
+		
+	
 
 	}
 
-	public  static int getStringWidth(String text) {
-		return text.length()*12;
 
-	}
-
-	public static void draw(Graphics g , String msg , int x, int y) {
-		msg=msg.toUpperCase();
-		int length=msg.length();
-
-		for (int i = 0; i < length; i++) {
-
-			int  c= text.indexOf(msg.charAt(i));
-			//System.out.println(c);
-			if(c<0) {x+=fontSize; continue ;}
-
-					g.drawImage(Shape.images.get(28+c),x,y,fontSize,fontSize+5,null);
-					x+=fontSize;			
+		public  void draw(Graphics g, String msg,int posX,int posY,List<BufferedImage> images ,int fontsize) {
+			
+			images = new ArrayList<BufferedImage>();
 
 
+			try {
+				BufferedImage originalImgage = ImageIO.read(new File("pacmanTiles.png"));
+				for (int i = 0; i < originalImgage.getHeight()/TILESIZE; i++) {
+					for (int j = 0; j <originalImgage.getWidth()/TILESIZE; j++) {
+						BufferedImage SubImgage = originalImgage.getSubimage(TILESIZE*j,i*TILESIZE , TILESIZE, TILESIZE);
+						images.add(SubImgage);
+					}
 
+				}	
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			msg=msg.toUpperCase();
+			int length=msg.length();
+
+			for (int i = 0; i < length; i++) {
+
+				int  c= text.indexOf(msg.charAt(i));
+				//System.out.println(c);
+				if(c<0) {posX+=fontsize; continue ;}
+
+						g.drawImage(images.get(28+c),posX,posY,fontsize,fontsize+5,null);
+						posX+=fontsize;			
+
+
+			
 		}
+	
+		
+
+		
 
 
 	}
