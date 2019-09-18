@@ -6,8 +6,13 @@ import java.awt.image.BufferStrategy;
 import javax.swing.JFrame;
 
 import Threads.AudioThread;
+import gfx.Blinky;
+import gfx.Clyde;
+import gfx.Ghost;
 import gfx.Help;
+import gfx.Inky;
 import gfx.Pacman;
+import gfx.Pinky;
 import gfx.Menu;
 
 import gfx.Ui;
@@ -18,14 +23,16 @@ import models.Input;
 
 public class GamePanel extends Canvas implements Runnable{
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	public static int WIDTH=600 ; 
 	public static int HEIGHT=800;
 	public static int FontFps =0;
 	public static  Pacman p ;
+	public static Ghost gh1;
+	public static Ghost gh2;
+	public static Ghost gh3;
+	public static Ghost gh4;
 	public Input i;
 	//private Thread animator;
 	public  static boolean running = false; 
@@ -55,7 +62,12 @@ public class GamePanel extends Canvas implements Runnable{
 	
 	public GamePanel() {
 		p=new  Pacman();
-		inerface = new Ui(p);
+		 gh1=new Blinky(280,260);
+		 gh2=new Clyde(310,300);
+		 gh3=new Inky(310,300);
+		 gh4=new Pinky(310,300);
+		
+		inerface = new Ui(p, gh1, gh2, gh3, gh4);
 		i=new Input(this,p);
 	
 		menu =new Menu() ;
@@ -147,13 +159,13 @@ public class GamePanel extends Canvas implements Runnable{
 		
 	
 		
-		audiothreadMusic=new AudioThread(".//res//pacman_beginning.wav");
-		audiothreadMusic.setMusic(true);
-		audiothreadMusic.start();
+	//	audiothreadMusic=new AudioThread(".//res//pacman_beginning.wav");
+	//	audiothreadMusic.setMusic(true);
+	//	audiothreadMusic.start();
 		
-		audiothreadSound = new AudioThread(".//res//pacman_chomp.wav");
-		audiothreadSound.setMusic(false);
-		audiothreadSound.start();
+	//	audiothreadSound = new AudioThread(".//res//pacman_chomp.wav");
+	//	audiothreadSound.setMusic(false);
+		//  audiothreadSound.start();
 		
 		
 		}

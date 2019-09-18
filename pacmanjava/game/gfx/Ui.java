@@ -18,6 +18,10 @@ public class Ui {
 
 	public static Input i;
 	public static  Pacman p ;
+	public static Ghost gh1;
+	public static Ghost gh2;
+	public static Ghost gh3;
+	public static Ghost gh4;
 	static Ui inerface;
 	static List<BufferedImage> images;
 	static Maze m;
@@ -29,11 +33,17 @@ public class Ui {
 	public static int  foc=0;
 	public static GamePanel gp ;
 	public static boolean nextlevel =false;
+	
 
-
-	public Ui(Pacman p) {
+	public Ui(Pacman p, Ghost gh1, Ghost gh2,  Ghost gh3 , Ghost gh4) {
 
 		this.p = p;
+		this.gh1=gh1;
+		this.gh2=gh2;
+		this.gh3=gh3;
+		this.gh4=gh4;
+
+		
 
 
 	}
@@ -88,7 +98,7 @@ public class Ui {
 			p.score.setScore(282+1);
 			level+=1;
 			p=new Pacman();
-			inerface = new Ui(p);
+			inerface = new Ui(p, gh1,gh2,gh3, gh4);
 			gamestate =new GameState();
 			p.draw(g, p.direction);
 			m= new Maze(20, 0, 0, images);
@@ -102,7 +112,7 @@ public class Ui {
 			p.score.setScore(565+1);
 			level+=1;
 			p=new Pacman();
-			inerface = new Ui(p);
+			inerface = new Ui(p, gh1,gh2,gh3, gh4);
 			gamestate =new GameState();
 			p.draw(g, p.direction);
 			m= new Maze(20, 0, 0, images);
@@ -159,13 +169,14 @@ public class Ui {
 		f.draw(g, "status" ,370, 670,images,15);
 
 
-		inerface = new Ui(p);
+		inerface = new Ui(p,gh1,gh2,gh3,gh4);
 		gamestate =new GameState();
 
 		p.draw(g, p.direction);
-
-
-
+		gh1.draw(g);
+		gh2.draw(g);
+		gh3.draw(g);
+		gh4.draw(g);
 
 
 
