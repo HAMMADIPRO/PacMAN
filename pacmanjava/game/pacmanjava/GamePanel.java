@@ -5,12 +5,16 @@ import java.awt.image.BufferStrategy;
 
 import javax.swing.JFrame;
 
-import gfx.GameAnime;
+import Threads.AudioThread;
+import gfx.Help;
 import gfx.Pacman;
-import gfx.Tile;
+import gfx.Menu;
+
 import gfx.Ui;
 import models.GameState;
 import models.Input;
+
+
 
 public class GamePanel extends Canvas implements Runnable{
 
@@ -21,11 +25,30 @@ public class GamePanel extends Canvas implements Runnable{
 	public static int WIDTH=600 ; 
 	public static int HEIGHT=800;
 	public static int FontFps =0;
-	public Pacman p ;
+	public static  Pacman p ;
 	public Input i;
 	//private Thread animator;
-	private  boolean running = false; 
+	public  static boolean running = false; 
+	public static int r=0;
+	Menu menu ;
+	Help help ;
+	public static AudioThread audiothreadMusic ;
+	public static AudioThread audiothreadSound ;
 
+	
+	public static enum STATE {
+		Menu,
+		Game,
+		Help
+	};
+	
+	public static STATE state = STATE.Menu;
+	
+	
+	
+	
+	
+	public 	static boolean paused =false ;
 	
 	
 	Ui inerface;
@@ -34,8 +57,17 @@ public class GamePanel extends Canvas implements Runnable{
 		p=new  Pacman();
 		inerface = new Ui(p);
 		i=new Input(this,p);
+	
+		menu =new Menu() ;
+		help = new Help() ;
+		
+		
 		
 	}
+	
+	
+	
+	
 	
 
 	@Override
@@ -60,7 +92,10 @@ public class GamePanel extends Canvas implements Runnable{
 			then=now; 
 			while(unprocessed>=1) {
 				tick++;
-				tick();
+				if(state==STATE.Game) {
+					tick();
+				}
+				
 				canRender=true;
 				--unprocessed;
 			}
@@ -75,15 +110,20 @@ public class GamePanel extends Canvas implements Runnable{
 				fps++;
 				render();
 			}
-			
 			if(System.currentTimeMillis()-fpsTimer>1000) {
 			//	System.out.printf("%d fps, %d tick %n" ,fps,tick );
 				FontFps=fps;
 				fps=0;tick=0;
 				fpsTimer+=1000;
+			
+				
+			
+				
 			}
 
 		}
+		
+	
 	}
 
 
@@ -98,15 +138,34 @@ public class GamePanel extends Canvas implements Runnable{
 		}
 		
 		Graphics g=bs.getDrawGraphics();
-		
-	
-		g.fillRect(0, 0, this.getHeight(),this.getHeight());
 		setBackground(Color.BLACK);
 		g.setColor(Color.BLACK);
-		
-		
+		g.fillRect(0, 0, this.getHeight(),this.getHeight());
+
+		if(state==STATE.Game) {
 		Ui.render(g, p);
 		
+	
+		
+		audiothreadMusic=new AudioThread(".//res//pacman_beginning.wav");
+		audiothreadMusic.setMusic(true);
+		audiothreadMusic.start();
+		
+		audiothreadSound = new AudioThread(".//res//pacman_chomp.wav");
+		audiothreadSound.setMusic(false);
+		audiothreadSound.start();
+		
+		
+		}
+		
+		if(state==STATE.Menu) {
+			menu.Render(g);
+			
+		}
+		
+		else if (state==STATE.Help) {
+			help.Render(g);
+		}
 		
 
 		g.dispose(); 
@@ -128,6 +187,7 @@ public class GamePanel extends Canvas implements Runnable{
 
 	private void tick() {
 	//	p.move();
+		//System.out.println(1111);
 		
 
 	}
@@ -143,13 +203,14 @@ public class GamePanel extends Canvas implements Runnable{
 		running=false;
 
 	}
+
 	
 	
 	
 	public static void main(String[] args) {
 		
 	
-		GamePanel game =new GamePanel();
+		GamePanel game =new GamePanel();		
 		Dimension demesion =new Dimension(WIDTH,HEIGHT);
 		game.setMaximumSize(demesion);	 
 		game.setMinimumSize(demesion);
@@ -168,6 +229,9 @@ public class GamePanel extends Canvas implements Runnable{
 		window.addWindowFocusListener(gamestate);
 		window.addWindowStateListener(gamestate);
 		
+		
+		
+	
 		game.start();
 		
 		

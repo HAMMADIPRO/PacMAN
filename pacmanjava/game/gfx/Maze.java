@@ -127,7 +127,27 @@ public class Maze extends Sprite {
 					g.fillRect(col*size+posX,row*size+posY,size,size);
 					
 					if(foods[row][col].isVisible && foods[row][col].type==1) 	g.drawImage(images.get(12),col* size+posX,row* size+posY, size, size,null);
-					if(foods[row][col].isVisible && foods[row][col].type==2) 	g.drawImage(images.get(14),col* size+posX,row* size+posY, size, size,null);
+					if(foods[row][col].isVisible && foods[row][col].type==2) {
+						
+						int frameIndex =  (int) (System.nanoTime() * 0.000000006) % 2;
+						
+
+						if(frameIndex ==1) {
+							g.drawImage(images.get(14),col* size+posX,row* size+posY,size, size,null);
+							
+
+						}
+						else if(frameIndex ==0) {
+							g.drawImage(images.get(13),col* size+posX,row* size+posY,size, size,null);
+							
+						}
+					
+
+					}
+						
+						
+						
+					
 
 				}
 
@@ -146,7 +166,14 @@ public class Maze extends Sprite {
 		
 	}
 		
-		
+	public void initfood() {
+		for(int row=0;row< mazeHeight ; row++) {
+			for(int col=0;col<mazeWidth;col++) {
+				
+				foods[row][col].isVisible=true;
+			}
+		}		
+	}
 	
 
 

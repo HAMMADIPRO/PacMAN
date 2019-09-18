@@ -11,9 +11,12 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+
 //import models.Maze;
 import pacmanjava.Sprite;
 import gfx.Maze;
+import models.GameState;
+import models.Input;
 
 /**
  * @author yassine
@@ -29,12 +32,13 @@ public class Pacman extends Sprite{
 	public static List<BufferedImage> images ;
 	boolean img=false ;
 	public boolean changed=false ;
-	String direction="STOP";
+	public static String direction="STOP";
 	int speed=0	;
 	private int dirX = 0;
 	private int dirY = 0;
 	public int psize =30;
-
+	//public static int score =0 ;
+	public static Score score =new Score();
 
 
 
@@ -73,7 +77,9 @@ public class Pacman extends Sprite{
 		int frameIndex =  (int) (System.nanoTime() * 0.000000006) % 2;
 
 	
+	if(!Ui.nextlevel) {
 		
+	
 			
 		
 		switch (d) {
@@ -82,13 +88,21 @@ public class Pacman extends Sprite{
 			g.drawImage(images.get(32),posX,posY,psize, psize,null);
 			break;
 		
+			
+	
+		
 		
 		case "RIGHT":
+			
+			
+			if( !Ui.tunneright()) {
+				System.out.println("rr");
+			}
+			
 			
 			a = (int)(((posX  +psize -5)/20)%30);
 			b = (int)(((posY+15)/20)%33);
 			
-
 			if(frameIndex ==1) {
 				g.drawImage(images.get(30),posX,posY,psize, psize,null);
 				
@@ -99,6 +113,11 @@ public class Pacman extends Sprite{
 				
 			}
 			
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
+				Ui.status="PLAY";
+
+			
+			
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				speed=2;
 
@@ -107,13 +126,24 @@ public class Pacman extends Sprite{
 				
 				if(Maze.foods[b][a].isVisible) {
 					Maze.foods[b][a].isVisible=false;
+					
+					switch (Maze.foods[b][a].type) {
+					case 1:
+						score.bonusGum();
+						break;
+					case 2:
+						score.bonusPacGum();
+						break;
+
+					}
+					
 				}
 			
 				
 				
 			}
 			
-			
+			}
 			
 			
 
@@ -122,6 +152,10 @@ public class Pacman extends Sprite{
 			
 
 		case "LEFT":
+			
+			
+			
+				
 			
 		
 			
@@ -136,22 +170,38 @@ public class Pacman extends Sprite{
 				g.drawImage(images.get(26),posX,posY,psize, psize,null);
 			}
 			
-			
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
+				Ui.status="PLAY";
+					
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				speed=2;
 
 				this.setPosX(this.getPosX()-speed);
 				if(Maze.foods[b][a].isVisible) {
 					Maze.foods[b][a].isVisible=false;
+					
+					switch (Maze.foods[b][a].type) {
+					case 1:
+						score.bonusGum();
+						break;
+					case 2:
+						score.bonusPacGum();
+						break;
+
+					}
 				}
 			
 			}
 			
 		
 			
-
+			}
 		
-		
+			
+			
+			else {
+				g.drawImage(images.get(24),posX,posY,psize, psize,null);
+			}
 			break;
 
 
@@ -173,7 +223,9 @@ public class Pacman extends Sprite{
 			}
 			
 			
-		
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
+				Ui.status="PLAY";
+
 			
 
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
@@ -183,13 +235,21 @@ public class Pacman extends Sprite{
 				if(Maze.foods[b][a].isVisible) {
 					Maze.foods[b][a].isVisible=false;
 					
-					
+					switch (Maze.foods[b][a].type) {
+					case 1:
+						score.bonusGum();
+						break;
+					case 2:
+						score.bonusPacGum();
+						break;
+
+					}
 				}
 				
 				
 			
 			}
-			
+			}
 			
 			break;
 
@@ -211,17 +271,28 @@ public class Pacman extends Sprite{
 				g.drawImage(images.get(27),posX,posY,psize, psize,null);
 			}
 			
-			
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
+				Ui.status="PLAY";
+
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				speed=2;
 
 				this.setPosY(this.getPosY()-speed);
 				if(Maze.foods[b][a].isVisible) {
 					Maze.foods[b][a].isVisible=false;
-					System.out.println("kkj");
+					switch (Maze.foods[b][a].type) {
+					case 1:
+						score.bonusGum();
+						break;
+					case 2:
+						score.bonusPacGum();
+						break;
+
+					}
 				}
 
 			
+			}
 			}
 			
 			break;
@@ -230,7 +301,14 @@ public class Pacman extends Sprite{
 
 		
 		}
-
+	
+	else if(Ui.nextlevel) {
+		this.posX=285;
+		this.posY=476;
+		g.drawImage(images.get(32),posX,posY,psize, psize,null);
+		
+	}
+	}
 
 	
 
@@ -238,6 +316,12 @@ public class Pacman extends Sprite{
 	public void setDirection(String direction) {
 		this.direction=direction;
 		this.changed=!changed;
+	}
+
+	
+	public String getDirection() {
+		return this.direction ;
+	
 	}
 
 

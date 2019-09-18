@@ -22,9 +22,10 @@ public class GameState  implements WindowListener  , WindowFocusListener, Window
 	
 
 	public static boolean state =false;
-	public static boolean focus=false ;
-	public static boolean iconified=true;
-	
+	public static boolean lostfocus=false ;
+	public static boolean iconified=false;
+	public static boolean resume=false;
+
 	
 	
 	
@@ -51,17 +52,19 @@ public class GameState  implements WindowListener  , WindowFocusListener, Window
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		iconified=true;
 		
+			iconified=true;
+			
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		
-		focus=true;
 		iconified=false;
+		resume=true;
+		sleep(3000);
+		resume=false;
 		
-	
+		
 	}
 
 	@Override
@@ -78,14 +81,16 @@ public class GameState  implements WindowListener  , WindowFocusListener, Window
 
 	@Override
 	public void windowGainedFocus(WindowEvent e) {
-		 focus=true;
-		
-		 
+		 lostfocus=false;
+		 resume=true;
+		 sleep(3000);
+		 resume=false;
 	}
 
 	@Override
 	public void windowLostFocus(WindowEvent e) {
-		 focus=false;
+		 lostfocus=true;
+		 
 			
 	}
 
@@ -101,10 +106,14 @@ public class GameState  implements WindowListener  , WindowFocusListener, Window
 		
 		try {
 			Thread.sleep(i);
+			
+			
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	
 	
