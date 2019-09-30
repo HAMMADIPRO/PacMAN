@@ -45,7 +45,7 @@ public static final String text ="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ:";
 
 
 			try {
-				BufferedImage originalImgage = ImageIO.read(new File("pacmanTiles.png"));
+				BufferedImage originalImgage = ImageIO.read(new File("res/pacmanTiles.png"));
 				for (int i = 0; i < originalImgage.getHeight()/TILESIZE; i++) {
 					for (int j = 0; j <originalImgage.getWidth()/TILESIZE; j++) {
 						BufferedImage SubImgage = originalImgage.getSubimage(TILESIZE*j,i*TILESIZE , TILESIZE, TILESIZE);

@@ -1,10 +1,4 @@
-
 package Threads;
-
-
-
-
-
 
 import java.io.File;
 
@@ -15,6 +9,14 @@ import javax.sound.sampled.BooleanControl;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
+import models.Input;
+
+
+// code FPS AudioThread
+/*AUDIOTHREAD=(isMuteO->setVolume->sleep->isRunning->AUDIOTHREAD |isNotMuteO->MUSIC),
+MUSIC= (isMusic->setVol->play->loop->isRunning->AUDIOTHREAD | play ->isRunning->AUDIOTHREAD).*/
+
+
 public class AudioThread extends Thread{
 
 	private volatile boolean isRunning = false;
@@ -22,7 +24,8 @@ public class AudioThread extends Thread{
 	private final String musicBack = ".//res//pacman_beginning.wav";
 	public String filename;
 	private boolean isMusic = false;
-	private int vol=40;
+	private int volM=0;
+	private int volS=0;
 	private boolean bPaused = false;
 	private boolean muteo = false;
 
@@ -35,50 +38,52 @@ public class AudioThread extends Thread{
 		super();
 	}
 
-
 	@Override
 	public void run() {
 		isRunning = true;
 		this.setFile(filename);
-	
-		
-			while(isRunning) {
-				
-				if(muteo) {
-					this.setVol(0);
-					this.setVolume(0);
-				}
-				
-				else if(!muteo){
 
-					if(isMusic) {
-						this.setVolume(vol);
 
-						try {
-							this.play();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						this.loop();
+		while(isRunning) {
 
-					}
-					else if(!isMusic){
-						this.setVolume(vol);
-
-						try {
-							this.play();
-							
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-											}
-
-					
-				}
-			
+			if(muteo) {
+				//this.setVol(0);
+				this.setVolume(0);
 			}
+
+			else if(!muteo){
+
+				if(isMusic) {
+					volM = Input.count;
+					this.setVolume(volM);
+					try {
+						this.play();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					this.loop();
+
+				}
+				else if(!isMusic){
+					volS= Input.countS;
+					this.setVolume(volS);
+					try {
+						this.play();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//this.stopAudioThread();
+				}
+
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 		}
-	
+	}
 
 	public synchronized void setFile(String soundFileName) {
 		try {
@@ -123,12 +128,7 @@ public class AudioThread extends Thread{
 	{
 		bPaused = false;
 	}
-	/*public void volume(double vol) {
-		FloatControl gain = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-		float db = (float) (Math.log(vol)/Math.log(10)*20);
-		gain.setValue(db);
-
-	}*/
+	
 
 	public void setMute(boolean mute) {
 		BooleanControl bc = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
@@ -163,24 +163,29 @@ public class AudioThread extends Thread{
 		this.isMusic = isMusic;
 	}
 
-	public int getVol() {
-		return vol;
+	public synchronized int getVolM() {
+		return volM;
 	}
 
-	public void setVol(int vol) {
-		this.vol = vol;
+	public synchronized void setVolM(int vol) {
+		this.volM = vol;
 	}
 
-	public boolean isMuteo() {
+	public synchronized boolean isMuteo() {
 		return muteo;
 	}
 
-	public void setMuteo(boolean muteo) {
+	public synchronized void setMuteo(boolean muteo) {
 		this.muteo = muteo;
 	}
 
+	public synchronized int getVolS() {
+		return volS;
+	}
 
-
-
+	public synchronized void setVolS(int volS) {
+		this.volS = volS;
+	}
+	
 
 }

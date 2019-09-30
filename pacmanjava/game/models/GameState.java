@@ -11,7 +11,6 @@ import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 
 import gfx.Pacman;
-import pacmanjava.GamePanel;
 
 
 

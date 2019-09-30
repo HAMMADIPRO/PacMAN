@@ -43,7 +43,7 @@ public class Maze extends Sprite {
 
 
 		try {
-			BufferedImage originalImgage = ImageIO.read(new File("pacmanTiles.png"));
+			BufferedImage originalImgage = ImageIO.read(new File("res/pacmanTiles.png"));
 
 			//System.out.println("Original Image Dimension: "+originalImgage.getWidth()+"x"+originalImgage.getHeight());
 

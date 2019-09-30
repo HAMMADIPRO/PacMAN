@@ -9,10 +9,14 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import Threads.PhysicsThread;
+import Threads.RenderThread;
 import models.GameState;
 import models.Input;
-import pacmanjava.GamePanel;
 
 public class Ui {
 
@@ -31,10 +35,11 @@ public class Ui {
 	public static int level=1;
 	public static String status ="PLAY";
 	public static int  foc=0;
-	public static GamePanel gp ;
+	public static RenderThread gp ;
 	public static boolean nextlevel =false;
-	
-
+	public static int nbout=0;
+	public static int fpss=0;
+    public static int count =0;
 	public Ui(Pacman p, Ghost gh1, Ghost gh2,  Ghost gh3 , Ghost gh4) {
 
 		this.p = p;
@@ -43,7 +48,7 @@ public class Ui {
 		this.gh3=gh3;
 		this.gh4=gh4;
 
-		
+
 
 
 	}
@@ -62,33 +67,55 @@ public class Ui {
 
 	public static  void render(Graphics g, Pacman p) {
 
-
-
+		count++;
 
 		m.draw(g);
 
 
 		Font f=new Font();
 
-		//drraw pacman lives 
-		for (int i = 0; i < p.score.getNbLife(); i++) {
-			g.drawImage(Pacman.images.get(30),100+40*i,740 ,30, 30,null);
-		}
+		
 
 
-		f.draw(g, "LIVES ",5, 750,images,15);
+		f.draw(g, "LIVES ",370, 670,images,15);
 
 
 		f.draw(g, "FPS ",370, 750,images,15);
 
 
-		f.draw(g, String.valueOf(GamePanel.FontFps),500, 750,images,15);
+		f.draw(g, String.valueOf(RenderThread.FontFps),500, 750,images,15);
 
 		f.draw(g, "Level ",5, 670,images,15); 
 
 
+		fpss=RenderThread.FontFps;
+		
+		String s= ""+level;	
 
-		int a=0;
+
+
+
+
+		String ss=""+p.score ;
+
+
+
+
+		f.draw(g, s ,100, 670,images,15); 
+
+
+
+		f.draw(g, "SCORE",160, 670,images,15); 
+		f.draw(g, ss,250, 670,images,15); 
+
+
+
+
+
+		f.draw(g, "status", 5, 750,images,15); 
+		f.draw(g, status ,120, 752 ,images,15);
+		
+
 
 
 		switch (p.score.getScore()) {
@@ -139,35 +166,56 @@ public class Ui {
 		status="STOP";
 		}
 
+		
+		int col =PhysicsThread.collision();
+		
+		
+		switch (col) {
+		case 1:
+			//p=new Pacman();
+			
+			p.setDirection("STOP");
+			
+			
+			p.setPosX (285);
+			p.setPosY(476);
+			inerface = new Ui(p,gh1,gh2,gh3,gh4);
+			
+			 gamestate =new GameState();
+		 	 p.draw(g, "STOP");
+		 	
+			m= new Maze(20, 0, 0, images);
+			
+			 
+			gh1.draw(g);
+			gh2.draw(g);
+			gh3.draw(g);
+			gh4.draw(g);
+
+			m.draw(g);
+			
+			
+			lives-=1;
+			RenderThread.test=true;
+			
+			break;
+
+		
+			
+			
+		}
+		
 
 
-
-
-		String s= ""+level;	
-
-
-
-
-
-		String ss=""+p.score ;
-
-
-
-
-		f.draw(g, s ,120, 670,images,15); 
-
-
-
-		f.draw(g, "SCORE",5, 710,images,15); 
-		f.draw(g, ss,120, 710,images,15); 
-
-
-
-
-
-		f.draw(g, status ,500, 670,images,15); 
-		f.draw(g, "status" ,370, 670,images,15);
-
+		//drraw pacman lives 
+				for (int i = 0; i < lives; i++) {
+					g.drawImage(Pacman.images.get(30),470+40*i,660 ,30, 30,null);
+					
+					
+					
+					
+				}
+		
 
 		inerface = new Ui(p,gh1,gh2,gh3,gh4);
 		gamestate =new GameState();
@@ -195,8 +243,68 @@ public class Ui {
 			status="Resume";
 		}
 
+		
+		if(lives<=0) {
+			f.draw(g, "Game Over" ,40, 340,images,50);
+			status="game over";
+			
+			
+			RenderThread.state=RenderThread.STATE.Menu;
+		}
 
+	//if(p.score.getScore()==1||GamePanel.test) {
+
+			
+		if(count==50)	{
+			count=0;
+
+			boolean out[]=new boolean[4];
+
+			while(nbout<4) {
+				
+				
+				Random r=new Random();
+				int rr=r.nextInt(4);
+				
+				
+						
+						if(rr==0 &&!out[0]) {
+							gh1.x=280;
+							gh1.y=260;
+							out[0]=true;
+							nbout++;
+							
+					}
+
+						if(rr==1 &&!out[1]) {
+							gh2.x=280;
+							gh2.y=260;
+							nbout++;
+							out[1]=true;
+						}
+
+						if(rr==2 &&!out[2]) {
+							gh3.x=280;
+							gh3.y=260;
+							nbout++;
+							out[2]=true;
+							
+						}
+
+						if(rr==3 &&!out[3]) {
+							gh4.x=280;
+							gh4.y=260;
+							nbout++;
+							out[3]=true;
+						}
+						}
+						
+					
+					}
+		
 	}
+
+	
 	public static boolean  tunneright() {
 
 		if(p.getPosX()>460&&p.getPosY()<310&&p.getPosY()>270&&p.getDirection()=="LEFT") {
@@ -214,16 +322,21 @@ public class Ui {
 	public static boolean  tunnelleft() {
 
 		if(p.getPosX()<120&&p.getPosY()<310&&p.getPosY()>270&&p.getDirection()=="RIGHT") {
-		
+
 			return false ;
 		}
 
 		return true;
 
 
+		
+		
+	
+		
+		
 
 	}
-
+	
 
 
 

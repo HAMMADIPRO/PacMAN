@@ -10,6 +10,9 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import models.GameState;
+import models.Input;
+
 
 
 
@@ -98,6 +101,7 @@ public abstract class Ghost {
 			randomDirect();
 		}
 
+	
 
 		switch (direction) {
 
@@ -113,12 +117,12 @@ public abstract class Ghost {
 				g.drawImage(img.get(numImg+1),x,y,ghSize, ghSize,null);
 
 			}
-
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				//SPEED=5;
 				x+=SPEED;	
 			}
-			else {count=0;}
+			else {count=0;}}
 			break;
 
 
@@ -134,13 +138,13 @@ public abstract class Ghost {
 			else if(frameIndex ==0) {
 				g.drawImage(img.get(numImg+3),x,y,ghSize, ghSize,null);
 			}
-
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				//SPEED=1;
 				y+=SPEED;
 
 			}
-			else {count=0;}
+			else {count=0;}}
 
 			break;
 
@@ -157,13 +161,13 @@ public abstract class Ghost {
 			else if(frameIndex ==0) {
 				g.drawImage(img.get(numImg+5),x,y,ghSize, ghSize,null);
 			}
-
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
 
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				//SPEED=1;
 				x-=SPEED;	
 			}
-			else {count=0;}
+			else {count=0;}}
 			break;
 
 
@@ -179,7 +183,7 @@ public abstract class Ghost {
 			else if(frameIndex ==0) {
 				g.drawImage(img.get(numImg+7),x,y,ghSize, ghSize,null);
 			}
-
+			if(!Input.pause&&!Input.inputResume&&!GameState.lostfocus&&!GameState.resume) {
 
 			if(Maze.maze[b][a] >= 30 || Maze.maze[b][a]==0) {
 				//SPEED=1;
@@ -187,12 +191,12 @@ public abstract class Ghost {
 
 			}
 			else {count=0;}
-
+			}
 			break;
 		}
 
 	}
-
+	
 
 
 
@@ -202,7 +206,7 @@ public abstract class Ghost {
 
 		img = new ArrayList<BufferedImage>();
 		try {
-			BufferedImage originalImgage = ImageIO.read(new File("pacmanTiles.png"));
+			BufferedImage originalImgage = ImageIO.read(new File("res/pacmanTiles.png"));
 			for (int i = 0; i < originalImgage.getHeight()/TILESIZE; i++) {
 				for (int j = 0; j <originalImgage.getWidth()/TILESIZE; j++) {
 					BufferedImage SubImgage = originalImgage.getSubimage(TILESIZE*j,i*TILESIZE , TILESIZE, TILESIZE);

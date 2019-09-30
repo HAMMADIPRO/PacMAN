@@ -7,7 +7,6 @@ package gfx;
 
 import java.awt.Graphics;
 
-import pacmanjava.GamePanel;
 
 public class GameAnime extends Thread {
 
